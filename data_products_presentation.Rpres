@@ -1,0 +1,70 @@
+```{r echo=F}
+data("faithful")
+```
+
+Old Faithful Geyser Waiting Time Estimator
+========================================================
+author: Adam
+date: 3/28/2016
+autosize: true
+
+Objective
+========================================================
+
+Although Old Faithful is known as a very reliable geyser, there is still variability in eruption waiting times.
+We have created an application that will estimate the remaining wait time and eruption length for a given wait time.
+```{r echo=F}
+summary(faithful)
+
+```
+
+
+Distribution of Wait Times
+========================================================
+
+```{r echo=F}
+hist(faithful$waiting,xlab="Wait Time (minutes)",main="Distribution of Wait Times between Eruptions")
+```
+***
+As you can see, Old 'Faithful' is not all that faithful. Wait times appear to have a bimodal distribution with local modes at about 53 and 80 minutes.
+
+Wait Times and Eruption Length
+========================================================
+
+```{r, echo=FALSE}
+    z <- lm(eruptions~waiting,data=faithful)
+    plot(y=faithful$eruptions,x=faithful$waiting,
+         xlab="Waiting Time",
+         ylab="Eruption Length (mins)",
+         main="Plot of Wait Time and Eruption Length")
+    abline(z,col="blue")
+    points(x=mean(faithful[,"waiting"]),
+           y=mean(faithful[,"eruptions"]),
+           type="p", col="red",
+           pch=19, cex=2)
+
+```
+***
+The blue line is the least squares estimate of eruption length for a given waiting time. The red dot is the expected value of waiting time and eruption length.
+
+The average wait time is `r round(mean(faithful$waiting),1)` minutes, and the average duration of an eruption is `r round(mean(faithful$eruptions),1)` minutes.
+
+Conditional Expected Wait Times and Eruption Length
+========================================================
+```{r, echo=FALSE}
+    condDist <- faithful[faithful$waiting>70,]
+    z <- lm(eruptions~waiting,data=condDist)
+    plot(y=faithful$eruptions,x=faithful$waiting,
+         xlab="Waiting Time",
+         ylab="Eruption Length (mins)",
+         main="Plot of Wait Time and Eruption Length")
+    abline(z,col="blue")
+    abline(v=70)
+    points(x=mean(condDist$waiting),
+           y=mean(condDist$eruptions),
+           type="p", col="red",
+           pch=19, cex=2)
+```
+***
+<small>This visual assumes a person has waited 70 minutes without an eruption. The visual contains the same information, but the regression line and expectation are based off the conditional expectation. The application also calculates the likelihood of an eruption occuring within the next five minutes.</small>
+<small>Assuming you have already waited 70 minutes: the average remaining wait time is `r round(mean(condDist$waiting),1)-70` minutes, the average eruptions lasts `r round(mean(condDist$eruptions),1)` minutes, and the likelihood of an eruption in the next 5 minutes is `r round(mean(condDist$waiting <= 70+5)*100,1)`%.</small>
