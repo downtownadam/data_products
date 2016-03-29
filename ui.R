@@ -1,15 +1,6 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-# 
-#    http://shiny.rstudio.com/
-#
+  library(shiny)
 
-library(shiny)
-
-# Define UI for application that draws a histogram
+# Define UI for application that draws a scatter plot with a conditional regression line based off current wait time.
 shinyUI(fluidPage(
   
   # Application title
@@ -18,16 +9,16 @@ shinyUI(fluidPage(
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-       sliderInput("bins",
-                   "Number of bins:",
-                   min = 1,
-                   max = 50,
-                   value = 30)
+      sliderInput("waited",
+                  "How long have you been waiting:",
+                  min = 0,
+                  max = 92,
+                  value = 0)
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
-       plotOutput("distPlot")
+      plotOutput("xyPlot")
     )
   )
 ))
